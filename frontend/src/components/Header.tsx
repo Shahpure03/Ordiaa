@@ -40,9 +40,9 @@ export function Header({ onLogout }: HeaderProps) {
                 <div className="flex items-center justify-between mb-3 md:mb-4">
                     <div className="flex items-center gap-2 md:gap-3">
                         <span className="text-2xl md:text-3xl">🌸</span>
-                        <h1 className="text-xl md:text-2xl font-semibold text-gray-700 tracking-tight">
+                        <h3 className="text-xl md:text-2xl font-semibold text-gray-700 tracking-tight">
                             Ordiaa
-                        </h1>
+                        </h3>
                     </div>
                     <button
                         onClick={onLogout}
