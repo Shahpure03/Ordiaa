@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: ordia-backend
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:$PORT"
+    rootDir: backend
+    envVars:
+      - key: DATABASE_URL
+        sync: false # Set this in the Render dashboard manually for security
+      - key: PYTHON_VERSION
+        value: 3.10.0

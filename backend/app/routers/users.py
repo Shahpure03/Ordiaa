@@ -1,0 +1,12 @@
+from fastapi import APIRouter, Depends
+from app.core.dependencies import get_current_user
+from app.models.user import User as UserModel
+from app.schemas.user import User as UserSchema
+
+router = APIRouter()
+
+@router.get("/me", response_model=UserSchema)
+def read_user_me(
+    current_user: UserModel = Depends(get_current_user),
+):
+    return current_user
