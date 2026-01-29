@@ -56,7 +56,20 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"}
+    try:
+        from app.core import security
+        test_hash = security.get_password_hash("test_password_123")
+        return {
+            "status": "healthy",
+            "hashing_works": True,
+            "version": "v1.2-truncated"
+        }
+    except Exception as e:
+        return {
+            "status": "unhealthy",
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }
 
 @app.get("/test-db")
 async def test_db(db: Session = Depends(get_db)):
