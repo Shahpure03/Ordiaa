@@ -36,6 +36,6 @@ backend/alembic/versions/*.py
 !backend/alembic/versions/.gitkeep
 
 #frontend
-.env
-.env.local
-.env.*.local
+Ordia/.env
+Ordia/.env.local
+Ordia/.env.*.local
