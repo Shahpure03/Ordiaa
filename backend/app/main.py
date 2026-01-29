@@ -12,16 +12,37 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.routers import auth, users, habits, todos, daily_logs
 
+from fastapi.responses import JSONResponse
+import traceback
+
 app = FastAPI(title=settings.PROJECT_NAME)
 
-# CORS configuration MUST be defined early
+# CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://ordiaa.vercel.app",
+        "*" # Keep wildcard for now to be sure
+    ],
     allow_credentials=False,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
 )
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": str(exc),
+            "traceback": traceback.format_exc(),
+            "message": "Internal Server Error Catch-all"
+        },
+        headers={
+            "Access-Control-Allow-Origin": "*",
+        }
+    )
 
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(users.router, prefix="/users", tags=["users"])
