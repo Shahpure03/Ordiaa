@@ -63,7 +63,7 @@ export function AdvancedTodoView({
     };
 
     const StatusColumn = ({ status, items }: { status: TodoStatus; items: TodoItem[] }) => (
-        <div className="flex-1 min-w-[300px] flex flex-col gap-3">
+        <div className="flex-1 w-full lg:min-w-[300px] flex flex-col gap-3">
             <h3 className="font-semibold text-gray-700 capitalize flex items-center justify-between sticky top-0 bg-white/50 backdrop-blur-sm p-2 rounded-lg z-10">
                 {status.replace("-", " ")}
                 <span className="text-sm font-normal text-gray-400 bg-white px-2 py-0.5 rounded-full border">
@@ -116,9 +116,9 @@ export function AdvancedTodoView({
                             <p className="text-gray-800 font-medium mb-3">{item.text}</p>
 
                             {/* Footer: Status Move Actions */}
-                            <div className="flex gap-1 text-xs text-gray-500 pt-2 border-t border-gray-50">
-                                <label className="flex items-center gap-1">
-                                    Status:
+                            <div className="flex flex-col sm:flex-row gap-2 sm:gap-1 text-xs text-gray-500 pt-2 border-t border-gray-50 sm:items-center">
+                                <label className="flex items-center gap-1 justify-between sm:justify-start">
+                                    <span className="shrink-0">Status:</span>
                                     <select
                                         value={item.status || "todo"}
                                         onChange={(e) => {
@@ -135,9 +135,9 @@ export function AdvancedTodoView({
                                         <option value="done">Done</option>
                                     </select>
                                 </label>
-                                <span className="text-gray-300 mx-1">|</span>
-                                <label className="flex items-center gap-1">
-                                    Priority:
+                                <span className="hidden sm:inline text-gray-300 mx-1">|</span>
+                                <label className="flex items-center gap-1 justify-between sm:justify-start">
+                                    <span className="shrink-0">Priority:</span>
                                     <select
                                         value={item.priority || "medium"}
                                         onChange={(e) =>
@@ -186,36 +186,38 @@ export function AdvancedTodoView({
                 {/* Add New Task Bar */}
                 <form
                     onSubmit={handleAddTask}
-                    className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-8 flex gap-4 items-center flex-wrap"
+                    className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-8 flex flex-col sm:flex-row gap-4 items-stretch sm:items-center"
                 >
                     <input
                         type="text"
                         placeholder="What needs to be done?"
                         value={newTaskText}
                         onChange={(e) => setNewTaskText(e.target.value)}
-                        className="flex-1 min-w-[200px] border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none border"
+                        className="flex-1 min-w-0 border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none border"
                     />
-                    <select
-                        value={newTaskPriority}
-                        onChange={(e) => setNewTaskPriority(e.target.value as TodoPriority)}
-                        className="border-gray-200 rounded-lg px-4 py-2 bg-gray-50 text-sm focus:ring-2 focus:ring-purple-500 outline-none border"
-                    >
-                        <option value="low">Low Priority</option>
-                        <option value="medium">Medium Priority</option>
-                        <option value="high">High Priority</option>
-                    </select>
-                    <select
-                        value={newTaskStatus}
-                        onChange={(e) => setNewTaskStatus(e.target.value as TodoStatus)}
-                        className="border-gray-200 rounded-lg px-4 py-2 bg-gray-50 text-sm focus:ring-2 focus:ring-purple-500 outline-none border"
-                    >
-                        <option value="todo">To Do</option>
-                        <option value="in-progress">In Progress</option>
-                        <option value="done">Done</option>
-                    </select>
+                    <div className="flex gap-2">
+                        <select
+                            value={newTaskPriority}
+                            onChange={(e) => setNewTaskPriority(e.target.value as TodoPriority)}
+                            className="flex-1 border-gray-200 rounded-lg px-4 py-2 bg-gray-50 text-sm focus:ring-2 focus:ring-purple-500 outline-none border"
+                        >
+                            <option value="low">Low Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="high">High Priority</option>
+                        </select>
+                        <select
+                            value={newTaskStatus}
+                            onChange={(e) => setNewTaskStatus(e.target.value as TodoStatus)}
+                            className="flex-1 border-gray-200 rounded-lg px-4 py-2 bg-gray-50 text-sm focus:ring-2 focus:ring-purple-500 outline-none border"
+                        >
+                            <option value="todo">To Do</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="done">Done</option>
+                        </select>
+                    </div>
                     <button
                         type="submit"
-                        className="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors flex items-center gap-2"
+                        className="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
                     >
                         <Plus className="w-4 h-4" />
                         Add Task
@@ -224,7 +226,7 @@ export function AdvancedTodoView({
 
                 {/* Kanban Columns */}
                 <div className="flex-1 overflow-x-auto">
-                    <div className="flex gap-6 min-w-full pb-4 items-start">
+                    <div className="flex flex-col lg:flex-row gap-6 pb-4 items-start">
                         {STATUSES.map((status) => (
                             <StatusColumn
                                 key={status}
