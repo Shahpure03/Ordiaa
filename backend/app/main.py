@@ -11,11 +11,35 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.routers import auth, users, habits, todos, daily_logs
+from alembic.config import Config
+from alembic import command
+import logging
+
+# Configure basic logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def run_migrations():
+    """Run Alembic migrations programmatically on startup."""
+    try:
+        # Assuming alembic.ini is in the parent directory (backend/) relative to app/
+        # Adjust path if necessary
+        alembic_cfg = Config("alembic.ini")
+        command.upgrade(alembic_cfg, "head")
+        logger.info("✅ Database migrations applied successfully.")
+    except Exception as e:
+        logger.error(f"❌ Migration failed: {e}")
+        # We don't raise here to allow app to start, but DB might be out of sync
+        pass
 
 from fastapi.responses import JSONResponse
 import traceback
 
 app = FastAPI(title=settings.PROJECT_NAME)
+
+@app.on_event("startup")
+async def startup_event():
+    run_migrations()
 
 # CORS configuration
 app.add_middleware(
