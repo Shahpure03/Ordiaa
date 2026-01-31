@@ -32,8 +32,7 @@ backend/venv/
 backend/__pycache__/
 backend/*.pyc
 backend/.pytest_cache/
-backend/alembic/versions/*.py
-!backend/alembic/versions/.gitkeep
+
 
 #frontend
 Ordia/.env
