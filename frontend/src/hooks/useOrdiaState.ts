@@ -36,14 +36,16 @@ export function useOrdiaaState() {
 
                 const todos: Record<string, TodoItem[]> = {};
                 todosData.forEach((t: any) => {
-                    const dateStr = t.created_at.split('T')[0];
+                    // Use due_date if available, otherwise created_at
+                    const rawDate = t.due_date || t.created_at;
+                    const dateStr = rawDate.split('T')[0];
                     if (!todos[dateStr]) todos[dateStr] = [];
                     todos[dateStr].push({
                         id: String(t.id),
                         text: t.title,
                         completed: t.is_completed,
-                        status: t.is_completed ? "done" : "todo",
-                        priority: "medium",
+                        status: (t.status as TodoStatus) || (t.is_completed ? "done" : "todo"),
+                        priority: (t.priority as TodoPriority) || "medium",
                         createdAt: dateStr,
                     });
                 });
@@ -127,13 +129,14 @@ export function useOrdiaaState() {
 
         if (token) {
             try {
-                const newTodoData = await api.createTodo(text, status === "done");
+                // Pass the selected date as due_date (ISO format)
+                const newTodoData = await api.createTodo(text, status === "done", priority, status, date.toISOString());
                 const newTodo: TodoItem = {
                     id: String(newTodoData.id),
                     text: newTodoData.title,
                     completed: newTodoData.is_completed,
-                    status: newTodoData.is_completed ? "done" : "todo",
-                    priority,
+                    status: (newTodoData.status as TodoStatus) || (newTodoData.is_completed ? "done" : "todo"),
+                    priority: (newTodoData.priority as TodoPriority) || priority,
                     createdAt: dateStr,
                 };
 
@@ -212,6 +215,9 @@ export function useOrdiaaState() {
                 const apiUpdates: any = {};
                 if (updates.text) apiUpdates.title = updates.text;
                 if (updates.completed !== undefined) apiUpdates.is_completed = updates.completed;
+                if (updates.status) apiUpdates.status = updates.status;
+                if (updates.priority) apiUpdates.priority = updates.priority;
+                if (updates.createdAt) apiUpdates.due_date = new Date(updates.createdAt).toISOString();
                 if (updates.status === "done") apiUpdates.is_completed = true;
 
                 await api.updateTodo(parseInt(todoId), apiUpdates);
